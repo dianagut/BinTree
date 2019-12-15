@@ -50,44 +50,47 @@ void printArray(NodeData* ndArray[])
         cout << " " << *ndArray[i] ;
     cout << ']' << endl;
 }
-int main() {
+int main(int argc, char **argv) {
+    cout << argv[0] << endl;
     test();
-//    // create file object infile and open it
-//    // for testing, call your data file something appropriate, e.g., inputdata.txt
-//    ifstream infile("inputdata.txt");
-//    if (!infile) {
-//        cout << "File could not be opened." << endl;
-//        return 1;
-//    }
-//
-//    // the NodeData class must have a constructor that takes a string
-//    NodeData notND("not");
-//    NodeData andND("and");
-//    NodeData sssND("sss");
-//    NodeData ttttND("tttt");
-//    NodeData oooND("ooo");
-//    NodeData yND("y");
-//    NodeData eND("e");
-//    NodeData mND("m");
-//    NodeData tND("t");
-//
-//    BinTree T, T2, dup;
-//    NodeData* ndArray[ARRAYSIZE];
-//    initArray(ndArray);
-//    cout << "Initial data:" << endl << "  ";
-//    buildTree(T, infile);              // builds and displays initial data
-//    cout << endl;
-//    BinTree first(T);                  // test copy constructor
+    // create file object infile and open it
+    // for testing, call your data file something appropriate, e.g., inputdata.txt
+    ifstream infile("inputdata.txt");
+    if (!infile) {
+        cout << "File could not be opened." << endl;
+        return 1;
+    }
+
+    // the NodeData class must have a constructor that takes a string
+    NodeData notND("not");
+    NodeData andND("and");
+    NodeData sssND("sss");
+    NodeData ttttND("tttt");
+    NodeData oooND("ooo");
+    NodeData yND("y");
+    NodeData eND("e");
+    NodeData mND("m");
+    NodeData tND("t");
+
+    BinTree T, T2, dup;
+    NodeData* ndArray[ARRAYSIZE];
+    initArray(ndArray);
+    cout << "Initial data:" << endl << "  ";
+    buildTree(T, infile);              // builds and displays initial data
+    cout << endl;
+    cout << "T:" << T << endl;
+    BinTree first(T);                  // test copy constructor
 //    dup = dup = T;                     // test operator=, self-assignment
+    
 //    while (!infile.eof()) {
 //        cout << "Tree Inorder:" << endl << T;             // operator<< does endl
 //        T.displaySideways();
 //
 //        // test retrieve
-//        NodeData* p;                    // pointer of retrieved object
-//        bool found;                     // whether or not object was found in tree
-//        found = T.retrieve(andND, p);
-//        cout << "Retrieve --> and:  " << (found ? "found" : "not found") << endl;
+        NodeData* p;                    // pointer of retrieved object
+        bool found;                     // whether or not object was found in tree
+        found = T.retrieve(andND, p);
+        cout << "Retrieve --> and:  " << (found ? "found" : "not found") << endl;
 //        found = T.retrieve(notND, p);
 //        cout << "Retrieve --> not:  " << (found ? "found" : "not found") << endl;
 //        found = T.retrieve(sssND, p);

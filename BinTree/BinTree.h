@@ -20,10 +20,11 @@ public:
     BinTree();
     ~BinTree();
     int getHeight();
-    bool insert(NodeData*);
+    bool insert(const NodeData *);
     bool makeEmpty();
     void bsTreeToArray(NodeData* []);
     void arrayToBSTree(NodeData* []);
+    bool retrieve(const NodeData &, NodeData* &);
     
     // Assignment operators
     BinTree& operator=(const BinTree& p);

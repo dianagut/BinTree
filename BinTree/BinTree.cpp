@@ -53,17 +53,22 @@ int BinTree::getHeight()
     return h;
 }
 
-bool BinTree::insert(NodeData *node)
+bool BinTree::insert(const NodeData *node)
 {
     if (!node)
         return false;
 
     if (!root) {
-        root = node;
+        root = new NodeData(*node);
         return true;
     }
     
-    if (node < root) {
+    NodeData *p;
+    if( retrieve(*node, p)) {
+        return false;
+    }
+    
+    if ((*root) > (*node) ) {
         if (!left) {
             left = new BinTree();
         }
@@ -120,6 +125,23 @@ void BinTree::arrayToBSTree(NodeData* array[] , int low, int high)
         right = new BinTree();
         right->arrayToBSTree(array, middle + 1, high);
     }
+}
+
+bool BinTree::retrieve(const NodeData &elem, NodeData* &answer)
+{
+    if (root) {
+        if (*root == elem) {
+            answer = root;
+            return true;
+        }
+        if (*root > elem && left) {
+            return left->retrieve(elem, answer);
+        }
+        if (*root < elem && right) {
+            return right->retrieve(elem, answer);
+        }
+    }
+    return false;
 }
 
 std::ostream& operator<<(std::ostream& os, const BinTree& p)
