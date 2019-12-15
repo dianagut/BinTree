@@ -21,10 +21,14 @@ BinTree::~BinTree() {
 bool BinTree::makeEmpty()
 {
     if (root) {
-        if (left)
+        if (left) {
             left->makeEmpty();
-        if (right)
+            left = NULL;
+        }
+        if (right) {
             right->makeEmpty();
+            right = NULL;
+        }
         delete root;
     }
     return true;
@@ -49,7 +53,7 @@ int BinTree::getHeight()
     return h;
 }
 
-bool BinTree::insertNode(NodeData *node)
+bool BinTree::insert(NodeData *node)
 {
     if (!node)
         return false;
@@ -63,14 +67,59 @@ bool BinTree::insertNode(NodeData *node)
         if (!left) {
             left = new BinTree();
         }
-        return left->insertNode(node);
+        return left->insert(node);
     } else {
         if (!right) {
             right = new BinTree();
         }
-        return right->insertNode(node);
+        return right->insert(node);
     }
     return false;
+}
+
+void BinTree::bsTreeToArray(NodeData* array[])
+{
+    bsTreeToArray(array, 0);
+    makeEmpty();
+}
+
+int BinTree::bsTreeToArray(NodeData* array[], int index)
+{
+    if (root) {
+        if (left) {
+            index = left->bsTreeToArray(array, index);
+        }
+        array[index] = root;
+        root = NULL;
+        index++;
+        if (right) {
+            index = right->bsTreeToArray(array, index);
+        }
+    }
+    return index;
+}
+
+void BinTree::arrayToBSTree(NodeData* array[])
+{
+    int sz = 0;
+    while (array[sz] ) { sz++; }
+    arrayToBSTree(array, 0, sz);
+}
+
+void BinTree::arrayToBSTree(NodeData* array[] , int low, int high)
+{
+    makeEmpty();
+    int middle = (low+high) / 2;
+    root = array[middle];
+    array[middle] = NULL;
+    if (low < middle) {
+        left = new BinTree();
+        left->arrayToBSTree(array, low, middle -1 );
+    }
+    if ((high - 1) > middle) {
+        right = new BinTree();
+        right->arrayToBSTree(array, middle + 1, high);
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const BinTree& p)

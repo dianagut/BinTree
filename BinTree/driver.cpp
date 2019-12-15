@@ -19,6 +19,7 @@ const int ARRAYSIZE = 100;
 //global function prototypes
 void buildTree(BinTree&, ifstream&);      //
 void initArray(NodeData*[]);             // initialize array to NULL
+void printArray(NodeData*[]);
 
 void test() {
     BinTree t;
@@ -26,12 +27,28 @@ void test() {
     NodeData *b = new NodeData("b");
     NodeData *c = new NodeData("c");
     
-    t.insertNode(b);
-    t.insertNode(a);
-    t.insertNode(c);
+    t.insert(b);
+    t.insert(a);
+    t.insert(c);
     
     cout << "height: " << t.getHeight() << endl;
     cout << "inorder: " << t << endl;
+    
+    NodeData* ndArray[ARRAYSIZE];
+    initArray(ndArray);
+    t.bsTreeToArray(ndArray);
+    printArray(ndArray);
+    t.arrayToBSTree(ndArray);
+    printArray(ndArray);
+    cout << "after arrayto bstree: " << t << endl;
+}
+
+void printArray(NodeData* ndArray[])
+{
+    cout << '[';
+    for (int i = 0; i < ARRAYSIZE && ndArray[i] ; i++)
+        cout << " " << *ndArray[i] ;
+    cout << ']' << endl;
 }
 int main() {
     test();
@@ -107,31 +124,31 @@ int main() {
 //    }
 //
 //    return 0;
-//}
+}
 //
-////------------------------------- buildTree ----------------------------------
-//// YOU COMMENT
-//
-//// To build a tree, read strings from a line, terminating when "$$" is
-//// encountered. Since there is some work to do before the actual insert that is
-//// specific to the client problem, it's best that building a tree is not a
-//// member function. It's a global function.
-//
-//void buildTree(BinTree& T, ifstream& infile) {
-//    string s;
-//
-//    for (;;) {
-//        infile >> s;
-//        cout << s << ' ';
-//        if (s == "$$") break;                // at end of one line
-//        if (infile.eof()) break;             // no more lines of data
-//        NodeData* ptr = new NodeData(s);     // NodeData constructor takes string
-//        // would do a setData if there were more than a string
-//
-//        bool success = T.insert(ptr);
-//        if (!success)
-//            delete ptr;                       // duplicate case, not inserted
-//    }
+//------------------------------- buildTree ----------------------------------
+// YOU COMMENT
+
+// To build a tree, read strings from a line, terminating when "$$" is
+// encountered. Since there is some work to do before the actual insert that is
+// specific to the client problem, it's best that building a tree is not a
+// member function. It's a global function.
+
+void buildTree(BinTree& T, ifstream& infile) {
+    string s;
+
+    for (;;) {
+        infile >> s;
+        cout << s << ' ';
+        if (s == "$$") break;                // at end of one line
+        if (infile.eof()) break;             // no more lines of data
+        NodeData* ptr = new NodeData(s);     // NodeData constructor takes string
+        // would do a setData if there were more than a string
+
+        bool success = T.insert(ptr);
+        if (!success)
+            delete ptr;                       // duplicate case, not inserted
+    }
 }
 
 //------------------------------- initArray ----------------------------------

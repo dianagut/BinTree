@@ -20,13 +20,17 @@ public:
     BinTree();
     ~BinTree();
     int getHeight();
-    bool insertNode(NodeData*);
+    bool insert(NodeData*);
     bool makeEmpty();
+    void bsTreeToArray(NodeData* []);
+    void arrayToBSTree(NodeData* []);
     
     // Assignment operators
     BinTree& operator=(const BinTree& p);
 private:
     int getHeight(NodeData*, int);
+    int bsTreeToArray(NodeData* [], int index);
+    void arrayToBSTree(NodeData* [] , int, int);
     NodeData *root = NULL;
     int height;
     BinTree* left;
