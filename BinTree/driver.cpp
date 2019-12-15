@@ -30,7 +30,8 @@ void test() {
     t.insertNode(a);
     t.insertNode(c);
     
-    cout << t.getHeight() << endl;
+    cout << "height: " << t.getHeight() << endl;
+    cout << "inorder: " << t << endl;
 }
 int main() {
     test();

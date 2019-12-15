@@ -77,11 +77,11 @@ std::ostream& operator<<(std::ostream& os, const BinTree& p)
 {
     if (p.root) {
         if (p.left) {
-            os << p.left;
+            os << *p.left;
         }
-        os << " " << p.root << " ";
+        os << " " << *p.root << " ";
         if (p.right) {
-            os << p.right;
+            os << *p.right;
         }
     }
     
