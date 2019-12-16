@@ -28,7 +28,7 @@ public:
     void bsTreeToArray(NodeData* []);
     void arrayToBSTree(NodeData* []);
     bool retrieve(const NodeData &, NodeData* &);
-    void displaySideways();
+    void displaySideways(void);
     
     // Assignment operators
     BinTree& operator=(const BinTree& p);
@@ -36,6 +36,7 @@ public:
     bool operator!=(const BinTree& p);
 
 private:
+    void displaySideways(std::string);
     int getHeight(NodeData*, int);
     int bsTreeToArray(NodeData* [], int index);
     void arrayToBSTree(NodeData* [] , int, int);

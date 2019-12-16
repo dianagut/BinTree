@@ -8,6 +8,8 @@
 
 #include "BinTree.h"
 
+using namespace std;
+
 BinTree::BinTree() {
 }
 
@@ -211,13 +213,38 @@ std::ostream& operator<<(std::ostream& os, const BinTree& p)
             os << *p.right;
         }
     }
-    
     return os;
 }
 
 void BinTree::displaySideways()
 {
-    // empty to allow driver compile
+    cout << endl;
+    displaySideways("");
+}
+
+void BinTree::displaySideways(string buff)
+{
+    size_t offset = 1;
+    if (root) {
+        offset += root->getDate().length();
+    }
+    string spacer = string(offset + buff.length(), ' ');
+    if (right) {
+        right->displaySideways(spacer);
+    }
+    if (root) {
+        if (right) {
+            cout << string(spacer.length() - 1, ' ') << '/' << endl;
+        }
+        cout << buff;
+        cout << *root << endl;
+        if (left) {
+            cout << string(spacer.length() - 1, ' ') << '\\' << endl;
+        }
+    }
+    if (left) {
+        left->displaySideways(spacer);
+    }
 }
 
 int BinTree::getHeight(const NodeData &node) const
