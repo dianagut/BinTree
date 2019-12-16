@@ -9,9 +9,6 @@
 #include "BinTree.h"
 
 BinTree::BinTree() {
-    root = NULL;
-    left = NULL;
-    right = NULL;
 }
 
 BinTree::~BinTree() {
@@ -21,7 +18,6 @@ BinTree::~BinTree() {
 BinTree::BinTree(const BinTree& bt)
 {
     if (root != bt.root) {
-        makeEmpty();
         root = new NodeData(*bt.root);
         if (bt.left) {
             left = new BinTree(*bt.left);
@@ -77,15 +73,16 @@ bool BinTree::operator!=(const BinTree& p)
 bool BinTree::makeEmpty()
 {
     if (root) {
-        if (left) {
-            left->makeEmpty();
-            left = NULL;
-        }
-        if (right) {
-            right->makeEmpty();
-            right = NULL;
-        }
         delete root;
+        root = NULL;
+    }
+    if (left) {
+        delete left;
+        left = NULL;
+    }
+    if (right) {
+        delete right;
+        right = NULL;
     }
     return true;
 }
@@ -119,8 +116,8 @@ bool BinTree::insert(const NodeData *node)
         return true;
     }
     
-    NodeData *p;
-    if( retrieve(*node, p)) {
+    if ((*root) == (*node)) {
+        // ignore duplicates
         return false;
     }
     
@@ -141,7 +138,9 @@ bool BinTree::insert(const NodeData *node)
 void BinTree::bsTreeToArray(NodeData* array[])
 {
     bsTreeToArray(array, 0);
-    makeEmpty();
+    root = NULL;
+    left = NULL;
+    right = NULL;
 }
 
 int BinTree::bsTreeToArray(NodeData* array[], int index)
@@ -162,6 +161,7 @@ int BinTree::bsTreeToArray(NodeData* array[], int index)
 
 void BinTree::arrayToBSTree(NodeData* array[])
 {
+    makeEmpty();
     int sz = 0;
     while (array[sz] ) { sz++; }
     arrayToBSTree(array, 0, sz);

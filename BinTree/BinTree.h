@@ -40,8 +40,8 @@ private:
     int bsTreeToArray(NodeData* [], int index);
     void arrayToBSTree(NodeData* [] , int, int);
     NodeData *root = NULL;
-    BinTree* left;
-    BinTree* right;
+    BinTree* left = NULL;
+    BinTree* right = NULL;
 };
 
 #endif /* BinTree_h */

@@ -21,28 +21,6 @@ void buildTree(BinTree&, ifstream&);      //
 void initArray(NodeData*[]);             // initialize array to NULL
 void printArray(NodeData*[]);
 
-void test() {
-    BinTree t;
-    NodeData *a = new NodeData("a");
-    NodeData *b = new NodeData("b");
-    NodeData *c = new NodeData("c");
-    
-    t.insert(b);
-    t.insert(a);
-    t.insert(c);
-    
-    cout << "height: " << t.getHeight() << endl;
-    cout << "inorder: " << t << endl;
-    
-    NodeData* ndArray[ARRAYSIZE];
-    initArray(ndArray);
-    t.bsTreeToArray(ndArray);
-    printArray(ndArray);
-    t.arrayToBSTree(ndArray);
-    printArray(ndArray);
-    cout << "after arrayto bstree: " << t << endl;
-}
-
 void printArray(NodeData* ndArray[])
 {
     cout << '[';
@@ -50,9 +28,9 @@ void printArray(NodeData* ndArray[])
         cout << " " << *ndArray[i] ;
     cout << ']' << endl;
 }
+
 int main(int argc, char **argv) {
-    cout << argv[0] << endl;
-    test();
+
     // create file object infile and open it
     // for testing, call your data file something appropriate, e.g., inputdata.txt
     ifstream infile("inputdata.txt");
@@ -72,10 +50,6 @@ int main(int argc, char **argv) {
     NodeData mND("m");
     NodeData tND("t");
     
-    cout << tND << endl;
-    NodeData nd1 = nd1 = tND;
-    cout << nd1 << endl;
-
     BinTree T, T2, dup;
     NodeData* ndArray[ARRAYSIZE];
     initArray(ndArray);
