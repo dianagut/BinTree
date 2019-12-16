@@ -71,6 +71,10 @@ int main(int argc, char **argv) {
     NodeData eND("e");
     NodeData mND("m");
     NodeData tND("t");
+    
+    cout << tND << endl;
+    NodeData nd1 = nd1 = tND;
+    cout << nd1 << endl;
 
     BinTree T, T2, dup;
     NodeData* ndArray[ARRAYSIZE];
@@ -80,53 +84,53 @@ int main(int argc, char **argv) {
     cout << endl;
     cout << "T:" << T << endl;
     BinTree first(T);                  // test copy constructor
-//    dup = dup = T;                     // test operator=, self-assignment
+    dup = dup = T;                     // test operator=, self-assignment
     
-//    while (!infile.eof()) {
-//        cout << "Tree Inorder:" << endl << T;             // operator<< does endl
-//        T.displaySideways();
-//
-//        // test retrieve
+    while (!infile.eof()) {
+        cout << "Tree Inorder:" << endl << T;             // operator<< does endl
+        T.displaySideways();
+
+        // test retrieve
         NodeData* p;                    // pointer of retrieved object
         bool found;                     // whether or not object was found in tree
         found = T.retrieve(andND, p);
         cout << "Retrieve --> and:  " << (found ? "found" : "not found") << endl;
-//        found = T.retrieve(notND, p);
-//        cout << "Retrieve --> not:  " << (found ? "found" : "not found") << endl;
-//        found = T.retrieve(sssND, p);
-//        cout << "Retrieve --> sss:  " << (found ? "found" : "not found") << endl;
-//
-//        // test getHeight
-//        cout << "Height    --> and:  " << T.getHeight(andND) << endl;
-//        cout << "Height    --> not:  " << T.getHeight(notND) << endl;
-//        cout << "Height    --> sss:  " << T.getHeight(sssND) << endl;
-//        cout << "Height    --> tttt:  " << T.getHeight(ttttND) << endl;
-//        cout << "Height    --> ooo:  " << T.getHeight(oooND) << endl;
-//        cout << "Height    --> y:  " << T.getHeight(yND) << endl;
-//
-//        // test ==, and !=
-//        T2 = T;
-//        cout << "T == T2?     " << (T == T2 ? "equal" : "not equal") << endl;
-//        cout << "T != first?  " << (T != first ? "not equal" : "equal") << endl;
-//        cout << "T == dup?    " << (T == dup ? "equal" : "not equal") << endl;
-//        dup = T;
-//
-//        // somewhat test bstreeToArray and arrayToBSTree
-//        T.bstreeToArray(ndArray);
-//        T.arrayToBSTree(ndArray);
-//        T.displaySideways();
-//
-//        T.makeEmpty();                  // empty out the tree
-//        initArray(ndArray);             // empty out the array
-//
-//        cout << "---------------------------------------------------------------"
-//            << endl;
-//        cout << "Initial data:" << endl << "  ";
-//        buildTree(T, infile);
-//        cout << endl;
-//    }
-//
-//    return 0;
+        found = T.retrieve(notND, p);
+        cout << "Retrieve --> not:  " << (found ? "found" : "not found") << endl;
+        found = T.retrieve(sssND, p);
+        cout << "Retrieve --> sss:  " << (found ? "found" : "not found") << endl;
+
+        // test getHeight
+        cout << "Height    --> and:  " << T.getHeight(andND) << endl;
+        cout << "Height    --> not:  " << T.getHeight(notND) << endl;
+        cout << "Height    --> sss:  " << T.getHeight(sssND) << endl;
+        cout << "Height    --> tttt:  " << T.getHeight(ttttND) << endl;
+        cout << "Height    --> ooo:  " << T.getHeight(oooND) << endl;
+        cout << "Height    --> y:  " << T.getHeight(yND) << endl;
+
+        // test ==, and !=
+        T2 = T;
+        cout << "T == T2?     " << (T == T2 ? "equal" : "not equal") << endl;
+        cout << "T != first?  " << (T != first ? "not equal" : "equal") << endl;
+        cout << "T == dup?    " << (T == dup ? "equal" : "not equal") << endl;
+        dup = T;
+
+        // somewhat test bstreeToArray and arrayToBSTree
+        T.bsTreeToArray(ndArray);
+        T.arrayToBSTree(ndArray);
+        T.displaySideways();
+
+        T.makeEmpty();                  // empty out the tree
+        initArray(ndArray);             // empty out the array
+
+        cout << "---------------------------------------------------------------"
+            << endl;
+        cout << "Initial data:" << endl << "  ";
+        buildTree(T, infile);
+        cout << endl;
+    }
+
+    return 0;
 }
 //
 //------------------------------- buildTree ----------------------------------

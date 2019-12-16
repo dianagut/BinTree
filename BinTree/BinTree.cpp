@@ -7,6 +7,7 @@
 //
 
 #include "BinTree.h"
+#include <memory>
 
 BinTree::BinTree() {
     root = NULL;
@@ -16,6 +17,62 @@ BinTree::BinTree() {
 
 BinTree::~BinTree() {
     makeEmpty();
+}
+
+BinTree::BinTree(const BinTree& bt)
+{
+    if (root != bt.root) {
+        makeEmpty();
+        root = new NodeData(*bt.root);
+        if (bt.left) {
+            left = new BinTree(*bt.left);
+        }
+        if (bt.right) {
+            right = new BinTree(*bt.right);
+        }
+    }
+}
+
+BinTree& BinTree::operator=(const BinTree& rhs)
+{
+    // if we are doing BT=BT then don't remove the original
+    if (this != &rhs)
+    {
+        // make sure there is some data to copy
+        if (rhs.root != NULL) {
+            root = new NodeData(*rhs.root);
+            if (rhs.left) {
+                left = new BinTree(*rhs.left);
+            }
+            if (rhs.right) {
+                right = new BinTree(*rhs.right);
+            }
+        }
+    }
+    return *this;
+}
+
+bool BinTree::operator==(const BinTree& p)
+{
+    if (std::addressof(*this) == std::addressof(p))
+        return true;
+    if ((*root) == (*p.root)) {
+        bool answer = true;
+        if (left && p.left) {
+            answer &= (*left) == (*p.left);
+        }
+        if (!answer) return answer;
+        if (right && p.right) {
+            answer &= (*right) == (*p.right);
+        }
+        return answer;
+    }
+    return false;
+}
+
+bool BinTree::operator!=(const BinTree& p)
+{
+    return false;
 }
 
 bool BinTree::makeEmpty()
@@ -157,4 +214,14 @@ std::ostream& operator<<(std::ostream& os, const BinTree& p)
     }
     
     return os;
+}
+
+void BinTree::displaySideways()
+{
+    
+}
+
+int BinTree::getHeight (const NodeData &) const
+{
+    return 0;
 }
