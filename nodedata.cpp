@@ -1,58 +1,36 @@
-#include "nodedata.h"
+#ifndef NODEDATA_H
+#define NODEDATA_H
+#include <string>
+#include <iostream>
+#include <fstream>
+using namespace std;
 
-//------------------- constructors/destructor  -------------------------------
-NodeData::NodeData() { data = ""; }                         // default
+// simple class containing one string to use for testing
+// not necessary to comment further
 
-NodeData::~NodeData() { }            // needed so strings are deleted properly
+class NodeData {
+	friend ostream & operator<<(ostream &, const NodeData &);
 
-NodeData::NodeData(const NodeData& nd) { data = nd.data; }  // copy
+public:
+	NodeData();          // default constructor, data is set to an empty string
+	~NodeData();
+	NodeData(const string &);      // data is set equal to parameter
+	NodeData(const NodeData &);    // copy constructor
+	NodeData& operator=(const NodeData &);
 
-NodeData::NodeData(const string& s) { data = s; }    // cast string to NodeData
+	// set class data from data file
+	// returns true if the data is set, false when bad data, i.e., is eof
+	bool setData(istream&);
 
-//------------------------- operator= ----------------------------------------
-NodeData& NodeData::operator=(const NodeData& rhs) {
-    if (this != &rhs) {
-        data = rhs.data;
-    }
-    return *this;
-}
+	bool operator==(const NodeData &) const;
+	bool operator!=(const NodeData &) const;
+	bool operator<(const NodeData &) const;
+	bool operator>(const NodeData &) const;
+	bool operator<=(const NodeData &) const;
+	bool operator>=(const NodeData &) const;
 
-//------------------------- operator==,!= ------------------------------------
-bool NodeData::operator==(const NodeData& rhs) const {
-    return data == rhs.data;
-}
+private:
+	string data;
+};
 
-bool NodeData::operator!=(const NodeData& rhs) const {
-    return data != rhs.data;
-}
-
-//------------------------ operator<,>,<=,>= ---------------------------------
-bool NodeData::operator<(const NodeData& rhs) const {
-    return data < rhs.data;
-}
-
-bool NodeData::operator>(const NodeData& rhs) const {
-    return data > rhs.data;
-}
-
-bool NodeData::operator<=(const NodeData& rhs) const {
-    return data <= rhs.data;
-}
-
-bool NodeData::operator>=(const NodeData& rhs) const {
-    return data >= rhs.data;
-}
-
-//------------------------------ setData -------------------------------------
-// returns true if the data is set, false when bad data, i.e., is eof
-
-bool NodeData::setData(istream& infile) {
-    getline(infile, data);
-    return !infile.eof();       // eof function is true when eof char is read
-}
-
-//-------------------------- operator<< --------------------------------------
-ostream& operator<<(ostream& output, const NodeData& nd) {
-    output << nd.data;
-    return output;
-}
+#endif
