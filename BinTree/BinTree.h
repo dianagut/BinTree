@@ -21,7 +21,7 @@ public:
     ~BinTree();
     BinTree(const BinTree& bt);
     
-    int getHeight();
+    int getHeight() const;
     int getHeight (const NodeData &) const;
     bool insert(const NodeData *);
     bool makeEmpty();

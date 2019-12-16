@@ -87,7 +87,7 @@ bool BinTree::makeEmpty()
     return true;
 }
 
-int BinTree::getHeight()
+int BinTree::getHeight() const
 {
     if (!root) {
         return 0;
@@ -217,10 +217,26 @@ std::ostream& operator<<(std::ostream& os, const BinTree& p)
 
 void BinTree::displaySideways()
 {
-    
+    // empty to allow driver compile
 }
 
-int BinTree::getHeight (const NodeData &) const
+int BinTree::getHeight(const NodeData &node) const
 {
+    if (*root == node) {
+        return getHeight();
+    } else {
+        if (left) {
+            int lh = left->getHeight(node);
+            if (lh != 0) {
+                return lh;
+            }
+        }
+        if (right) {
+            int rh = right->getHeight(node);
+            if (rh != 0) {
+                return rh;
+            }
+        }
+    }
     return 0;
 }
