@@ -7,7 +7,6 @@
 //
 
 #include "BinTree.h"
-#include <memory>
 
 BinTree::BinTree() {
     root = NULL;
@@ -54,7 +53,7 @@ BinTree& BinTree::operator=(const BinTree& rhs)
 
 bool BinTree::operator==(const BinTree& p)
 {
-    if (std::addressof(*this) == std::addressof(p))
+    if (this == &p)
         return true;
     if ((*root) == (*p.root)) {
         bool answer = true;
