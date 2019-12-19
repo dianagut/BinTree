@@ -19,18 +19,30 @@ class BinTree {
 public:
     BinTree();
     ~BinTree();
-    int getHeight();
-    bool insertNode(NodeData*);
+    BinTree(const BinTree& bt);
+    
+    int getHeight() const;
+    int getHeight (const NodeData &) const;
+    bool insert(const NodeData *);
     bool makeEmpty();
+    void bsTreeToArray(NodeData* []);
+    void arrayToBSTree(NodeData* []);
+    bool retrieve(const NodeData &, NodeData* &);
+    void displaySideways(void);
     
     // Assignment operators
     BinTree& operator=(const BinTree& p);
+    bool operator==(const BinTree& p);
+    bool operator!=(const BinTree& p);
+
 private:
+    void displaySideways(std::string);
     int getHeight(NodeData*, int);
+    int bsTreeToArray(NodeData* [], int index);
+    void arrayToBSTree(NodeData* [] , int, int);
     NodeData *root = NULL;
-    int height;
-    BinTree* left;
-    BinTree* right;
+    BinTree* left = NULL;
+    BinTree* right = NULL;
 };
 
 #endif /* BinTree_h */
