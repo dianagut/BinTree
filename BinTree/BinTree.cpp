@@ -10,10 +10,15 @@
 
 using namespace std;
 
-BinTree::BinTree() {
+BinTree::BinTree()
+{
     root = NULL;
 }
 
+BinTree::~BinTree()
+{
+    makeEmpty();
+}
 
 BinTree::BinTree(const BinTree& rhs)
 {
