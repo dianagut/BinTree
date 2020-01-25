@@ -11,23 +11,33 @@
 using namespace std;
 
 BinTree::BinTree() {
+    root = NULL;
 }
 
-BinTree::~BinTree() {
-    makeEmpty();
-}
 
-BinTree::BinTree(const BinTree& bt)
+BinTree::BinTree(const BinTree& rhs)
 {
-    if (root != bt.root) {
-        root = new NodeData(*bt.root);
-        if (bt.left) {
-            left = new BinTree(*bt.left);
-        }
-        if (bt.right) {
-            right = new BinTree(*bt.right);
-        }
+    if (root != rhs.root) {
+        root = new Node();
+        root = copy(rhs.root);
     }
+}
+
+BinTree::Node* BinTree::copy(const Node* rhsNode)
+{
+    if (rhsNode == NULL) {
+        return NULL;
+    }
+    Node* node = new Node();
+    node->data = new NodeData(*rhsNode->data);
+    node->left = node->right = NULL;
+    if (rhsNode->left) {
+        node->left = copy(rhsNode->left);
+    }
+    if (rhsNode->right) {
+        node->right = copy(rhsNode->right);
+    }
+    return node;
 }
 
 BinTree& BinTree::operator=(const BinTree& rhs)
@@ -37,13 +47,10 @@ BinTree& BinTree::operator=(const BinTree& rhs)
     {
         // make sure there is some data to copy
         if (rhs.root != NULL) {
-            root = new NodeData(*rhs.root);
-            if (rhs.left) {
-                left = new BinTree(*rhs.left);
+            if (root != NULL) {
+                makeEmpty(root);
             }
-            if (rhs.right) {
-                right = new BinTree(*rhs.right);
-            }
+            root = copy(rhs.root);
         }
     }
     return *this;
@@ -53,7 +60,7 @@ bool BinTree::operator==(const BinTree& p)
 {
     if (this == &p)
         return true;
-    if ((*root) == (*p.root)) {
+    if ((*root->data) == (*p.root->data)) {
         bool answer = true;
         if (left && p.left) {
             answer &= (*left) == (*p.left);
@@ -67,24 +74,23 @@ bool BinTree::operator==(const BinTree& p)
     return false;
 }
 
+bool BinTree::equalHelper(Node* lNode, Node* rNode)
+{
+    
+}
+
+
 bool BinTree::operator!=(const BinTree& p)
 {
     return false;
 }
 
-bool BinTree::makeEmpty()
+bool BinTree::makeEmpty(Node* node)
 {
-    if (root) {
-        delete root;
-        root = NULL;
-    }
-    if (left) {
-        delete left;
-        left = NULL;
-    }
-    if (right) {
-        delete right;
-        right = NULL;
+    if (node != NULL) {
+        makeEmpty(node->left);
+        makeEmpty(node->right);
+        delete node;
     }
     return true;
 }
@@ -140,23 +146,29 @@ bool BinTree::insert(const NodeData *node)
 void BinTree::bsTreeToArray(NodeData* array[])
 {
     bsTreeToArray(array, 0);
-    root = NULL;
-    left = NULL;
-    right = NULL;
+    makeEmpty(root);
 }
 
 int BinTree::bsTreeToArray(NodeData* array[], int index)
 {
     if (root) {
-        if (left) {
-            index = left->bsTreeToArray(array, index);
+        bsTreeToArrayHelper(root, array, 0);
+    }
+    return index;
+}
+
+int BinTree::bsTreeToArrayHelper(BinTree::Node* node, NodeData* array[], int index)
+{
+    if (node) {
+        if (node->left) {
+            index = bsTreeToArrayHelper(node->left, array, index);
         }
-        array[index] = root;
-        root = NULL;
+        array[index] = node->data;
         index++;
-        if (right) {
-            index = right->bsTreeToArray(array, index);
+        if (node->right) {
+            index = bsTreeToArrayHelper(node->right, array, index);
         }
+        delete node;
     }
     return index;
 }
@@ -166,22 +178,21 @@ void BinTree::arrayToBSTree(NodeData* array[])
     makeEmpty();
     int sz = 0;
     while (array[sz] ) { sz++; }
-    arrayToBSTree(array, 0, sz);
+    arrayToBSTreeHelper(root, array, 0, sz);
 }
 
-void BinTree::arrayToBSTree(NodeData* array[] , int low, int high)
+void BinTree::arrayToBSTreeHelper(Node* node, NodeData* array[], int low, int high)
 {
-    makeEmpty();
     int middle = (low+high) / 2;
-    root = array[middle];
+    node->data = array[middle];
     array[middle] = NULL;
     if (low < middle) {
-        left = new BinTree();
-        left->arrayToBSTree(array, low, middle -1 );
+        node->left = new Node();
+        arrayToBSTreeHelper(node->left, array, low, middle - 1);
     }
-    if ((high - 1) > middle) {
-        right = new BinTree();
-        right->arrayToBSTree(array, middle + 1, high);
+    if ((high -1) > middle) {
+        node->right = new Node();
+        arrayToBSTreeHelper(node->right, array, middle + 1, high);
     }
 }
 
@@ -249,21 +260,46 @@ void BinTree::displaySideways(string buff)
 
 int BinTree::getHeight(const NodeData &node) const
 {
-    if (*root == node) {
-        return getHeight();
-    } else {
-        if (left) {
-            int lh = left->getHeight(node);
-            if (lh != 0) {
+    if (root!=NULL) {
+        return getHeightHelper(root, target);
+    }
+    return 0;
+}
+
+int BinTree::getHeightHelper(BinTree::Node* node, const NodeData &target)
+{
+    if(node != NULL) {
+        if (node->data == target) {
+            return 1 + calcHeight(node);
+        }
+        int lh = 0, rh = 0;
+        if (node->left) {
+            lh = getHeightHelper(node->left, target);
+            if (lh > 0) {
                 return lh;
             }
         }
-        if (right) {
-            int rh = right->getHeight(node);
-            if (rh != 0) {
+        if (node->right) {
+            rh = getHeightHelper(node->right, target);
+            if (rh > 0) {
                 return rh;
             }
         }
     }
     return 0;
+}
+
+int BinTree::calcHeight(BinTree::Node* node)
+{
+    int lh = rh = 0;
+    if (node->left) {
+        lh = 1 + calcHeight(node->left);
+    }
+    if (node->right) {
+        rh = 1 + calcHeight(node->right);
+    }
+    if (lh > rh ) {
+        return lh;
+    }
+    return rh;
 }
