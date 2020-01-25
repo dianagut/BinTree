@@ -36,13 +36,28 @@ public:
     bool operator!=(const BinTree& p);
 
 private:
+    struct Node
+    {
+        NodeData* data;
+        Node* left = NULL;
+        Node* right = NULL;
+    };
+    Node* root;
+
+    bool makeEmpty(Node* node);
+
     void displaySideways(std::string);
     int getHeight(NodeData*, int);
     int bsTreeToArray(NodeData* [], int index);
-    void arrayToBSTree(NodeData* [] , int, int);
-    NodeData *root = NULL;
-    BinTree* left = NULL;
-    BinTree* right = NULL;
+    void arrayToBSTreeHelper(Node* node, NodeData* [] , int, int);
+    Node* copy(const Node* node);
+    bool equalHelper(Node* lNode, Node* rNode);
+    int getHeightHelper(BinTree::Node* node, const NodeData &target);
+    int calcHeight(Node* node);
+    int bsTreeToArrayHelper(Node* node, NodeData* array[], int index);
+//    NodeData *root = NULL;
+//    BinTree* left = NULL;
+//    BinTree* right = NULL;
 };
 
 #endif /* BinTree_h */

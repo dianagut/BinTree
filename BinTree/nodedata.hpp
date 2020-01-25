@@ -21,7 +21,7 @@ public:
     bool operator>=(const NodeData& rhs);
 
     bool setData(std::istream& infile);
-    std::string getDate() { return data ;}
+    std::string getData() { return data ;}
     
 private:
     std::string data;
