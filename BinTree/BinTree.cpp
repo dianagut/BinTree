@@ -23,8 +23,7 @@ BinTree::~BinTree()
 BinTree::BinTree(const BinTree& rhs)
 {
     if (root != rhs.root) {
-        root = new Node();
-        root = copy(rhs.root);
+        root = new Node(rhs.root->data);
     }
 }
 
@@ -33,9 +32,7 @@ BinTree::Node* BinTree::copy(const Node* rhsNode)
     if (rhsNode == NULL) {
         return NULL;
     }
-    Node* node = new Node();
-    node->data = new NodeData(*rhsNode->data);
-    node->left = node->right = NULL;
+    Node* node = new Node(rhsNode->data);
     if (rhsNode->left) {
         node->left = copy(rhsNode->left);
     }
@@ -65,58 +62,54 @@ bool BinTree::operator==(const BinTree& p)
 {
     if (this == &p)
         return true;
-    if ((*root->data) == (*p.root->data)) {
+    return equalHelper(root, p.root);
+}
+
+bool BinTree::equalHelper(Node* lNode, Node* rNode)
+{
+    if ( !lNode && !rNode) {
+        // both sides null they will be considered equal
+        return true;
+    }
+    if ( !lNode || !rNode ) {
+        // one side empty, one with data, is considered not equal
+        return false;
+    }
+    if ((*lNode->data) == (*rNode->data)) {
         bool answer = true;
-        if (left && p.left) {
-            answer &= (*left) == (*p.left);
+        if (lNode->left && rNode->left) {
+            answer &= equalHelper(lNode->left, rNode->right);
         }
-        if (!answer) return answer;
-        if (right && p.right) {
-            answer &= (*right) == (*p.right);
+        if (!answer) return false;
+        if (lNode->right && rNode->right) {
+            answer &= equalHelper(lNode->right, rNode->right);
         }
         return answer;
     }
     return false;
 }
 
-bool BinTree::equalHelper(Node* lNode, Node* rNode)
-{
-    
-}
-
 
 bool BinTree::operator!=(const BinTree& p)
 {
-    return false;
+    return !equalHelper(root, p.root);
+}
+
+bool BinTree::makeEmpty()
+{
+    makeEmpty(root);
+    root = NULL;
+    return true;
 }
 
 bool BinTree::makeEmpty(Node* node)
 {
-    if (node != NULL) {
+    if (node) {
         makeEmpty(node->left);
         makeEmpty(node->right);
         delete node;
     }
     return true;
-}
-
-int BinTree::getHeight() const
-{
-    if (!root) {
-        return 0;
-    }
-    int hl = 0;
-    int hr = 0;
-    int h = 1;
-    if (left) {
-        hl = left->getHeight();
-    }
-    if (right) {
-        hr = right->getHeight();
-    }
-    int max = (hl > hr) ? hl : hr;
-    h += max;
-    return h;
 }
 
 bool BinTree::insert(const NodeData *node)
@@ -125,25 +118,32 @@ bool BinTree::insert(const NodeData *node)
         return false;
 
     if (!root) {
-        root = new NodeData(*node);
+        root = new Node(node);
         return true;
     }
     
-    if ((*root) == (*node)) {
+    if ((*root->data) == (*node)) {
         // ignore duplicates
         return false;
     }
     
-    if ((*root) > (*node) ) {
-        if (!left) {
-            left = new BinTree();
+    return insertHelper(root, node);
+}
+
+bool BinTree::insertHelper(Node* root, const NodeData *node)
+{
+    if ((*root->data) > (*node)) {
+        if (!root->left) {
+            root->left = new Node(node);
+            return true;
         }
-        return left->insert(node);
+        return insertHelper(root->left, node);
     } else {
-        if (!right) {
-            right = new BinTree();
+        if (!root->right) {
+            root->right = new Node(node);
+            return true;
         }
-        return right->insert(node);
+        return insertHelper(root->right, node);
     }
     return false;
 }
@@ -151,13 +151,13 @@ bool BinTree::insert(const NodeData *node)
 void BinTree::bsTreeToArray(NodeData* array[])
 {
     bsTreeToArray(array, 0);
-    makeEmpty(root);
 }
 
 int BinTree::bsTreeToArray(NodeData* array[], int index)
 {
     if (root) {
         bsTreeToArrayHelper(root, array, 0);
+        root = NULL;
     }
     return index;
 }
@@ -183,6 +183,7 @@ void BinTree::arrayToBSTree(NodeData* array[])
     makeEmpty();
     int sz = 0;
     while (array[sz] ) { sz++; }
+    root = new Node();
     arrayToBSTreeHelper(root, array, 0, sz);
 }
 
@@ -204,77 +205,87 @@ void BinTree::arrayToBSTreeHelper(Node* node, NodeData* array[], int low, int hi
 bool BinTree::retrieve(const NodeData &elem, NodeData* &answer)
 {
     if (root) {
-        if (*root == elem) {
-            answer = root;
-            return true;
-        }
-        if (*root > elem && left) {
-            return left->retrieve(elem, answer);
-        }
-        if (*root < elem && right) {
-            return right->retrieve(elem, answer);
-        }
+        return retrieveHelper(root, elem, answer);
+    }
+    return false;
+}
+
+bool BinTree::retrieveHelper(Node* node, const NodeData &elem, NodeData* &answer)
+{
+    if (*node->data == elem) {
+        answer = node->data;
+        return true;
+    }
+    if (*node->data > elem && node->left) {
+        return retrieveHelper(node->left, elem, answer);
+    }
+    if (*node->data < elem && node->right) {
+        return retrieveHelper(node->right, elem, answer);
     }
     return false;
 }
 
 std::ostream& operator<<(std::ostream& os, const BinTree& p)
 {
-    if (p.root) {
-        if (p.left) {
-            os << *p.left;
+    return p.nodeOutput(os, p.root);
+}
+
+std::ostream& BinTree::nodeOutput(std::ostream& os, const Node* node) const
+{
+    if (node && node->data) {
+        if (node->left) {
+            nodeOutput(os, node->left);
         }
-        os << " " << *p.root << " ";
-        if (p.right) {
-            os << *p.right;
+        os << " " << node->data << " ";
+        if (node->right) {
+            nodeOutput(os, node->right);
         }
     }
     return os;
 }
-
 void BinTree::displaySideways()
 {
     cout << endl;
-    displaySideways("");
+    displaySideways(root, "");
 }
 
-void BinTree::displaySideways(string buff)
+void BinTree::displaySideways(Node* root, string buff)
 {
     size_t offset = 1;
     if (root) {
-        offset += root->getDate().length();
+        offset += root->data->getData().length();
     }
     string spacer = string(offset + buff.length(), ' ');
-    if (right) {
-        right->displaySideways(spacer);
+    if (root->right) {
+        displaySideways(root->right, spacer);
     }
     if (root) {
-        if (right) {
+        if (root->right) {
             cout << string(spacer.length() - 1, ' ') << '/' << endl;
         }
         cout << buff;
-        cout << *root << endl;
-        if (left) {
+        cout << *root->data << endl;
+        if (root->left) {
             cout << string(spacer.length() - 1, ' ') << '\\' << endl;
         }
     }
-    if (left) {
-        left->displaySideways(spacer);
+    if (root->left) {
+        displaySideways(root->left, spacer);
     }
 }
 
-int BinTree::getHeight(const NodeData &node) const
+int BinTree::getHeight(const NodeData &target) const
 {
-    if (root!=NULL) {
+    if (root) {
         return getHeightHelper(root, target);
     }
     return 0;
 }
 
-int BinTree::getHeightHelper(BinTree::Node* node, const NodeData &target)
+int BinTree::getHeightHelper(const Node* node, const NodeData &target) const
 {
     if(node != NULL) {
-        if (node->data == target) {
+        if (*node->data == target) {
             return 1 + calcHeight(node);
         }
         int lh = 0, rh = 0;
@@ -294,9 +305,9 @@ int BinTree::getHeightHelper(BinTree::Node* node, const NodeData &target)
     return 0;
 }
 
-int BinTree::calcHeight(BinTree::Node* node)
+int BinTree::calcHeight(const BinTree::Node* node) const
 {
-    int lh = rh = 0;
+    int lh = 0, rh = 0;
     if (node->left) {
         lh = 1 + calcHeight(node->left);
     }
